@@ -5,9 +5,11 @@ case $v2ray_transport in
 	if [[ $is_path ]]; then
 		cat >/etc/caddy/Caddyfile <<-EOF
 $domain {
-    reverse_proxy $proxy_site {
-        header_up Host {upstream_hostport}
-        header_up X-Forwarded-Host {host}
+    handle {
+        reverse_proxy $proxy_site {
+            header_up Host {upstream_hostport}
+            header_up X-Forwarded-Host {host}
+        }
     }
     handle_path /${path} {
         reverse_proxy 127.0.0.1:${v2ray_port}
@@ -28,18 +30,24 @@ import sites/*
 	if [[ $is_path ]]; then
 		cat >/etc/caddy/Caddyfile <<-EOF
 $domain {
-    reverse_proxy $proxy_site {
-        header_up Host {upstream_hostport}
-        header_up X-Forwarded-Host {host}
+    handle {
+        reverse_proxy $proxy_site {
+            header_up Host {upstream_hostport}
+            header_up X-Forwarded-Host {host}
+        }
     }
-	reverse_proxy /${path} h2c://127.0.0.1:${v2ray_port}
+    handle_path /${path} {
+        reverse_proxy h2c://127.0.0.1:${v2ray_port}
+    }
 }
 import sites/*
 		EOF
 	else
 		cat >/etc/caddy/Caddyfile <<-EOF
 $domain {
-	reverse_proxy h2c://127.0.0.1:${v2ray_port}
+    handle_path * {
+        reverse_proxy h2c://127.0.0.1:${v2ray_port}
+    }
 }
 import sites/*
 		EOF
