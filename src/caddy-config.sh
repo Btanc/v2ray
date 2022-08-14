@@ -5,6 +5,7 @@ case $v2ray_transport in
 	if [[ $is_path ]]; then
 		cat >/etc/caddy/Caddyfile <<-EOF
 $domain {
+    encode gzip
     handle {
         reverse_proxy $proxy_site {
             header_up Host {upstream_hostport}
@@ -20,6 +21,7 @@ import sites/*
 	else
 		cat >/etc/caddy/Caddyfile <<-EOF
 $domain {
+  encode gzip
 	reverse_proxy 127.0.0.1:${v2ray_port}
 }
 import sites/*
@@ -30,6 +32,7 @@ import sites/*
 	if [[ $is_path ]]; then
 		cat >/etc/caddy/Caddyfile <<-EOF
 $domain {
+    encode gzip
     handle {
         reverse_proxy $proxy_site {
             header_up Host {upstream_hostport}
@@ -45,6 +48,7 @@ import sites/*
 	else
 		cat >/etc/caddy/Caddyfile <<-EOF
 $domain {
+    encode gzip
     handle_path * {
         reverse_proxy h2c://127.0.0.1:${v2ray_port}
     }
